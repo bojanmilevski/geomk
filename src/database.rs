@@ -7,17 +7,17 @@ use sqlx::Sqlite;
 use sqlx::SqlitePool;
 
 pub struct Database {
-	pub db: SqlitePool,
+	db: SqlitePool,
 }
 
 impl Database {
-	fn table_query(query: &str) -> String {
+	fn make_command(table_name: &str) -> String {
 		format!(
-			"CREATE TABLE IF NOT EXISTS {query} (
-                id INTEGER PRIMARY KEY,
-                lat REAL NOT NULL,
-                lon REAL NOT NULL
-            );"
+			"CREATE TABLE IF NOT EXISTS {table_name} (
+				id INTEGER PRIMARY KEY,
+				lat REAL NOT NULL,
+				lon REAL NOT NULL
+			);"
 		)
 	}
 
@@ -30,21 +30,21 @@ impl Database {
 
 		let db = SqlitePool::connect(&url).await?;
 
-		sqlx::query(&Self::table_query("coordinates"))
+		sqlx::query(&Self::make_command("coordinates"))
 			.execute(&db)
 			.await?;
 
-		sqlx::query(&Self::table_query(&city)).execute(&db).await?;
+		sqlx::query(&Self::make_command(&city)).execute(&db).await?;
 
 		Ok(Self { db })
 	}
 
 	pub async fn insert_data(&self, data: &MapData, to: &str) -> Result<()> {
-		let insert_data_query = format!("INSERT OR IGNORE INTO {to} (id, lat, lon) VALUES (?1, ?2, ?3)");
+		let query_command = format!("INSERT OR IGNORE INTO {to} (id, lat, lon) VALUES (?1, ?2, ?3)");
 
-		for element in &data.elements {
+		for element in &data.coordinates {
 			if element.lat != 0.0 && element.lat != 0.0 {
-				sqlx::query(&insert_data_query)
+				sqlx::query(&query_command)
 					.bind(&element.id)
 					.bind(&element.lat)
 					.bind(&element.lon)
@@ -56,12 +56,10 @@ impl Database {
 		Ok(())
 	}
 
-	pub async fn select_data(&self, from: &str) -> Result<Vec<Coordinates>> {
-		let select_data_query = format!("SELECT id, lat, lon FROM {from}");
-		let coordinates: Vec<Coordinates> = sqlx::query_as(&select_data_query)
-			.fetch_all(&self.db)
-			.await?;
+	pub async fn select_data(&self, from: &str) -> Result<MapData> {
+		let query_command = format!("SELECT id, lat, lon FROM {from}");
+		let coordinates: Vec<Coordinates> = sqlx::query_as(&query_command).fetch_all(&self.db).await?;
 
-		Ok(coordinates)
+		Ok(MapData { coordinates })
 	}
 }
