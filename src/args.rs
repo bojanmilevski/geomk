@@ -9,6 +9,6 @@ pub struct Args {
 	#[arg(short, long, default_value = "drinking_water")]
 	pub query: String,
 
-	#[arg(short, long, default_value = "coordinates")]
-	pub table_name: String,
+	#[arg(short, long, default_value = "Skopje")]
+	pub city: String,
 }

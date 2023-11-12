@@ -9,6 +9,14 @@ pub struct MapData {
 #[derive(Debug, Deserialize, FromRow)]
 pub struct Coordinates {
 	pub id: i64,
-	pub lat: f32,
-	pub lon: f32,
+
+	#[serde(default = "default")]
+	pub lat: f64,
+
+	#[serde(default = "default")]
+	pub lon: f64,
+}
+
+fn default() -> f64 {
+	0.0
 }
