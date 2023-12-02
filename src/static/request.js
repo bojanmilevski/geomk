@@ -1,0 +1,27 @@
+async function mapCoordinates(coordinates) {
+  if (coordinates.length == 0) {
+    return;
+  }
+
+  for (let i = 0; i < coordinates.length; i++) {
+    var lat = coordinates[i].lat;
+    var lon = coordinates[i].lon;
+    L.marker([lat, lon]).addTo(map)
+  }
+}
+
+async function sendRequest() {
+  const City = document.getElementById("city").value;
+
+  const response = await fetch("http://localhost:8000/city", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ city: City }),
+  });
+
+  const coordinates = await response.json();
+  console.log(coordinates)
+  await mapCoordinates(coordinates);
+}

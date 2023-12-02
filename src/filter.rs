@@ -16,7 +16,7 @@ impl CityFilter {
 
 impl Filter<MapData> for CityFilter {
 	fn execute(&self, input: MapData) -> MapData {
-		let mut map = MapData { coordinates: Vec::new() };
+		let mut map = MapData { ..Default::default() };
 
 		for e in input.coordinates {
 			if e.is_in_city(&self.city) {
