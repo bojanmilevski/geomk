@@ -1,0 +1,103 @@
+<mxfile host="app.diagrams.net" modified="2023-12-03T22:20:41.977Z" agent="Mozilla/5.0 (X11; Linux x86_64; rv:120.0) Gecko/20100101 Firefox/120.0" etag="xVTPVPTFMq9mu6jWwj9T" version="22.1.5" type="device">
+  <diagram name="Page-1" id="x9gVm1L3J5UDwQdVsTp4">
+    <mxGraphModel dx="794" dy="782" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="PUSwcEPSec_FLevrc_CK-43" value="" style="rounded=1;whiteSpace=wrap;html=1;dashed=1;" parent="1" vertex="1">
+          <mxGeometry x="570" y="400" width="230" height="120" as="geometry" />
+        </mxCell>
+        <mxCell id="PUSwcEPSec_FLevrc_CK-1" value="" style="rounded=1;whiteSpace=wrap;html=1;dashed=1;" parent="1" vertex="1">
+          <mxGeometry x="180" y="40" width="190" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="PUSwcEPSec_FLevrc_CK-4" value="" style="rounded=1;whiteSpace=wrap;html=1;dashed=1;" parent="1" vertex="1">
+          <mxGeometry x="40" y="180" width="470" height="580" as="geometry" />
+        </mxCell>
+        <mxCell id="PUSwcEPSec_FLevrc_CK-31" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.401;entryY=0.005;entryDx=0;entryDy=0;exitX=0.152;exitY=1.012;exitDx=0;exitDy=0;exitPerimeter=0;entryPerimeter=0;" parent="1" source="PUSwcEPSec_FLevrc_CK-2" target="PUSwcEPSec_FLevrc_CK-5" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="PUSwcEPSec_FLevrc_CK-2" value="&lt;div&gt;Web browser&lt;/div&gt;&lt;div&gt;(HTML, CSS, JavaScript)&lt;br&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#1ba1e2;strokeColor=#006EAF;fontColor=#ffffff;fontStyle=1" parent="1" vertex="1">
+          <mxGeometry x="215" y="70" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="PUSwcEPSec_FLevrc_CK-3" value="Client" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" parent="1" vertex="1">
+          <mxGeometry x="180" y="40" width="50" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="PUSwcEPSec_FLevrc_CK-32" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.607;exitY=0.001;exitDx=0;exitDy=0;exitPerimeter=0;entryX=0.867;entryY=1.002;entryDx=0;entryDy=0;entryPerimeter=0;" parent="1" source="PUSwcEPSec_FLevrc_CK-5" target="PUSwcEPSec_FLevrc_CK-2" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="PUSwcEPSec_FLevrc_CK-5" value="" style="rounded=1;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+          <mxGeometry x="65" y="220" width="420" height="130" as="geometry" />
+        </mxCell>
+        <mxCell id="PUSwcEPSec_FLevrc_CK-6" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#1ba1e2;fontColor=#ffffff;strokeColor=#006EAF;" parent="1" vertex="1">
+          <mxGeometry x="65" y="220" width="30" height="130" as="geometry" />
+        </mxCell>
+        <mxCell id="PUSwcEPSec_FLevrc_CK-7" value="Presentation Layer" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" parent="1" vertex="1">
+          <mxGeometry x="215" y="230" width="120" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="PUSwcEPSec_FLevrc_CK-8" value="React frameweork components" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+          <mxGeometry x="130" y="270" width="320" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="PUSwcEPSec_FLevrc_CK-49" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=-0.002;entryY=0.422;entryDx=0;entryDy=0;entryPerimeter=0;" parent="1" source="PUSwcEPSec_FLevrc_CK-22" target="PUSwcEPSec_FLevrc_CK-47" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="PUSwcEPSec_FLevrc_CK-22" value="" style="rounded=1;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+          <mxGeometry x="65" y="405" width="420" height="130" as="geometry" />
+        </mxCell>
+        <mxCell id="PUSwcEPSec_FLevrc_CK-23" value="Service Layer" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" parent="1" vertex="1">
+          <mxGeometry x="225" y="415" width="100" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="PUSwcEPSec_FLevrc_CK-24" value="GeoMK Service" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+          <mxGeometry x="130" y="455" width="320" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="PUSwcEPSec_FLevrc_CK-25" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#1ba1e2;fontColor=#ffffff;strokeColor=#006EAF;" parent="1" vertex="1">
+          <mxGeometry x="65" y="405" width="30" height="130" as="geometry" />
+        </mxCell>
+        <mxCell id="PUSwcEPSec_FLevrc_CK-26" value="" style="rounded=1;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+          <mxGeometry x="65" y="600" width="420" height="130" as="geometry" />
+        </mxCell>
+        <mxCell id="PUSwcEPSec_FLevrc_CK-27" value="Persistence Layer" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" parent="1" vertex="1">
+          <mxGeometry x="215" y="610" width="120" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="PUSwcEPSec_FLevrc_CK-29" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#1ba1e2;fontColor=#ffffff;strokeColor=#006EAF;" parent="1" vertex="1">
+          <mxGeometry x="65" y="600" width="30" height="130" as="geometry" />
+        </mxCell>
+        <mxCell id="PUSwcEPSec_FLevrc_CK-35" value="" style="rounded=1;whiteSpace=wrap;html=1;dashed=1;" parent="1" vertex="1">
+          <mxGeometry x="70" y="790" width="440" height="160" as="geometry" />
+        </mxCell>
+        <mxCell id="PUSwcEPSec_FLevrc_CK-36" value="Database server" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" parent="1" vertex="1">
+          <mxGeometry x="80" y="800" width="110" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="PUSwcEPSec_FLevrc_CK-41" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.611;exitY=0;exitDx=0;exitDy=0;exitPerimeter=0;entryX=0.625;entryY=1.003;entryDx=0;entryDy=0;entryPerimeter=0;" parent="1" source="PUSwcEPSec_FLevrc_CK-37" target="PUSwcEPSec_FLevrc_CK-28" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="PUSwcEPSec_FLevrc_CK-37" value="" style="rounded=1;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+          <mxGeometry x="110" y="840" width="360" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="PUSwcEPSec_FLevrc_CK-38" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#1ba1e2;fontColor=#ffffff;strokeColor=#006EAF;" parent="1" vertex="1">
+          <mxGeometry x="110" y="840" width="20" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="PUSwcEPSec_FLevrc_CK-39" value="Database" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" parent="1" vertex="1">
+          <mxGeometry x="255" y="840" width="70" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="PUSwcEPSec_FLevrc_CK-40" value="SQLite" style="rounded=1;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+          <mxGeometry x="235" y="870" width="120" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="PUSwcEPSec_FLevrc_CK-42" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.388;entryY=-0.016;entryDx=0;entryDy=0;entryPerimeter=0;exitX=0.374;exitY=0.997;exitDx=0;exitDy=0;exitPerimeter=0;" parent="1" source="PUSwcEPSec_FLevrc_CK-28" target="PUSwcEPSec_FLevrc_CK-37" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="PUSwcEPSec_FLevrc_CK-28" value="API Calls" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+          <mxGeometry x="130" y="650" width="320" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="PUSwcEPSec_FLevrc_CK-45" value="OpenStreetMap" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" parent="1" vertex="1">
+          <mxGeometry x="580" y="410" width="110" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="PUSwcEPSec_FLevrc_CK-47" value="Overpass API" style="rounded=1;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+          <mxGeometry x="590" y="445" width="190" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="PUSwcEPSec_FLevrc_CK-50" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.997;entryY=0.589;entryDx=0;entryDy=0;entryPerimeter=0;exitX=0.001;exitY=0.604;exitDx=0;exitDy=0;exitPerimeter=0;" parent="1" source="PUSwcEPSec_FLevrc_CK-47" target="PUSwcEPSec_FLevrc_CK-22" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
