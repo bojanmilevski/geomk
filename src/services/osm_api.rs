@@ -1,5 +1,5 @@
-use crate::errors;
-use crate::Result;
+use crate::errors::errors::Error;
+use crate::errors::errors::Result;
 
 const OVERPASS_URL: &str = "https://overpass-api.de/api/interpreter";
 
@@ -14,7 +14,7 @@ impl OsmApi {
 			.await?;
 
 		if !response.status().is_success() {
-			return Err(errors::Error::Response);
+			return Err(Error::Response);
 		}
 
 		let raw_data = response.text().await?;

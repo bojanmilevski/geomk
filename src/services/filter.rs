@@ -1,4 +1,4 @@
-use crate::map_data::MapData;
+use crate::models::map_data::MapData;
 
 pub trait Filter<T> {
 	fn execute(&self, input: T) -> T;
@@ -18,9 +18,9 @@ impl Filter<MapData> for CityFilter {
 	fn execute(&self, input: MapData) -> MapData {
 		let mut map = MapData { ..Default::default() };
 
-		for e in input.coordinates {
-			if e.is_in_city(&self.city) {
-				map.coordinates.push(e);
+		for coordinates in input.coordinates {
+			if coordinates.is_in_city(&self.city) {
+				map.coordinates.push(coordinates);
 			}
 		}
 

@@ -1,10 +1,11 @@
-use crate::map_data::Coordinates;
-use crate::map_data::MapData;
-use crate::Result;
-
+use crate::errors::errors::Result;
+use crate::models::map_data::Coordinates;
+use crate::models::map_data::MapData;
 use sqlx::migrate::MigrateDatabase;
 use sqlx::Sqlite;
 use sqlx::SqlitePool;
+
+const DB_NAME: &'static str = "database";
 
 pub struct Database {
 	db: SqlitePool,
@@ -21,8 +22,8 @@ impl Database {
 		)
 	}
 
-	pub async fn new(db_name: &str, city: &str) -> Result<Self> {
-		let url = format!("sqlite://{db_name}.db");
+	pub async fn new() -> Result<Self> {
+		let url = format!("sqlite://{DB_NAME}.db");
 
 		if !Sqlite::database_exists(&url).await? {
 			Sqlite::create_database(&url).await?;
@@ -30,13 +31,14 @@ impl Database {
 
 		let db = SqlitePool::connect(&url).await?;
 
-		sqlx::query(&Self::make_command("coordinates"))
-			.execute(&db)
-			.await?;
-
-		sqlx::query(&Self::make_command(&city)).execute(&db).await?;
-
 		Ok(Self { db })
+	}
+
+	pub async fn insert_table(&self, table_name: &str) -> Result<()> {
+		sqlx::query(&Self::make_command(&table_name))
+			.execute(&self.db)
+			.await?;
+		Ok(())
 	}
 
 	pub async fn insert_data(&self, data: &MapData, to: &str) -> Result<()> {

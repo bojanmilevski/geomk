@@ -21,11 +21,17 @@ pub enum Error {
 
 	#[error("Axum Error")]
 	Axum(#[from] axum::Error),
+
+	#[error("IO Error")]
+	IO(#[from] std::io::Error),
+
+	#[error("Axum HTTP Error")]
+	AxumHTTP(#[from] axum::http::Error),
 }
 
 impl IntoResponse for Error {
 	fn into_response(self) -> Response {
-		eprintln!("ERROR");
+		eprintln!("ERROR: {:#?}", self);
 
 		(StatusCode::INTERNAL_SERVER_ERROR, "UNHANDLED_ERROR").into_response()
 	}

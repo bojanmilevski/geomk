@@ -1,4 +1,4 @@
-use super::filter::Filter;
+use crate::services::filter::Filter;
 
 pub struct Pipe<T> {
 	filters: Vec<Box<dyn Filter<T>>>,

@@ -11,17 +11,17 @@ async function mapCoordinates(coordinates) {
 }
 
 async function sendRequest() {
-  const City = document.getElementById("city").value;
+  const City = document.getElementById('city').value;
+  const Query = document.getElementById('query').value;
 
-  const response = await fetch("http://localhost:8000/city", {
-    method: "POST",
+  const response = await fetch('http://localhost:8000/request', {
+    method: 'POST',
     headers: {
-      "Content-Type": "application/json",
+      'Content-Type': 'application/json',
     },
-    body: JSON.stringify({ city: City }),
+    body: JSON.stringify({ city: City, query: Query }),
   });
 
   const coordinates = await response.json();
-  console.log(coordinates)
   await mapCoordinates(coordinates);
 }
