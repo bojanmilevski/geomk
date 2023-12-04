@@ -171,6 +171,10 @@ A simple mockup image of GeoMK's frontend:
 
 ![GUI mockup image](./assets/gui_mockup.png)
 
+## PROJECT STRUCTURE
+
+![Project structure image](./assets/structure.png)
+
 ## LICENSE
 
 This software is licensed under the [GPL v3.0 License](https://www.gnu.org/licenses/gpl-3.0.en.html).
