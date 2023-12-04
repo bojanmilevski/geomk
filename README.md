@@ -6,7 +6,9 @@ queries.
 
 ## EXAMPLE
 
-![Example video](./assets/example_video.webm)
+<!-- ![Example video](./assets/example_video.webm) -->
+
+[example_video.webm](https://github.com/bojanmilevski/geomk/assets/113335496/f9d6cef5-8848-4b4b-bdc4-0159f43d0afc)
 
 ## ARCHITECTURAL DESIGN
 
