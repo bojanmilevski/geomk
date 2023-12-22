@@ -3,6 +3,13 @@ name = "geomk"
 version = "0.1.0"
 edition = "2021"
 
+[profile.release]
+codegen-units = 1
+lto = true
+opt-level = 'z'
+panic = 'abort'
+strip = true
+
 [dependencies]
 axum = "0.7.1"
 httpc-test = "0.1.8"
@@ -13,4 +20,4 @@ serde_json = "1.0.108"
 sqlx = { version = "0.7.2", features = ["sqlite", "runtime-tokio"] }
 thiserror = "1.0.50"
 tokio = { version = "1.33.0", features = ["full"] }
-tower-http = { version = "0.5.0", features = ["cors"] }
+tower-http = { version = "0.5.0", features = ["cors", "fs"] }
