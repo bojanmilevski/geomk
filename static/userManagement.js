@@ -88,5 +88,5 @@ const sendLogInRequest = async (credentials) => {
 		throw Error('Login error');
 	}
 
-	window.location.href = '/map/index.html';
+	window.location.href = '/map.html';
 }

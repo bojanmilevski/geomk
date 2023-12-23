@@ -1,127 +1,78 @@
-use crate::database::Database;
-use crate::errors;
 use crate::errors::Result;
-use crate::filter::CityFilter;
-use crate::map_data::Coordinates;
-use crate::map_data::MapData;
-use crate::osm_api::OsmApi;
-use crate::pipe::Pipe;
-use axum::Json;
-use serde::Deserialize;
-use serde::Serialize;
-use serde_json::json;
-use serde_json::Value;
-use sqlx::migrate::MigrateDatabase;
-use sqlx::Sqlite;
-use sqlx::SqlitePool;
-use tower_cookies::Cookie;
-use tower_cookies::Cookies;
+use crate::handlers;
+use crate::mw_require_auth;
+use axum::http::Response;
+use axum::middleware;
+use axum::response::Html;
+use axum::routing::get;
+use axum::routing::post;
+use axum::Router;
 
-#[derive(Deserialize, Serialize, Debug, Clone)]
-pub struct Request {
-	pub query: String,
-	pub city: String,
+async fn map_index_route() -> Result<Html<String>> {
+	Ok(Html(tokio::fs::read_to_string("./static/map.html").await?))
 }
 
-#[derive(Deserialize, Serialize, Debug, Clone)]
-pub struct Credentials {
-	pub username: String,
-	pub password: String,
+async fn map_script_route() -> Result<Response<String>> {
+	Ok(Response::builder()
+		.header("Content-Type", "text/javascript")
+		.body(tokio::fs::read_to_string("./static/map.js").await?)?)
 }
 
-pub async fn handle_request(request: Json<Request>) -> Result<Json<Vec<Coordinates>>> {
-	let json_coordinates = OsmApi::query_coordinates(&request.query).await?;
-	let coordinates: MapData = serde_json::from_str(&json_coordinates)?;
-
-	let json_boundaries = OsmApi::query_city_boundaries(&request.city).await?;
-	let city_boundaries: MapData = serde_json::from_str(&json_boundaries)?;
-
-	let db = Database::new().await?;
-	db.insert_table("coordinates").await?;
-	db.insert_data(&coordinates, "coordinates").await?;
-	db.insert_table(&request.city).await?;
-	db.insert_data(&city_boundaries, &request.city).await?;
-
-	let coordinates_data = db.select_data("coordinates").await?;
-	let city_boundaries_data = db.select_data(&request.city).await?;
-
-	let mut pipe: Pipe<MapData> = Pipe::new();
-	pipe.add_filter(Box::new(CityFilter::new(city_boundaries_data)));
-	let result = pipe.run_filters(coordinates_data);
-
-	Ok(Json(result.coordinates))
+async fn request_route() -> Result<Response<String>> {
+	Ok(Response::builder()
+		.header("Content-Type", "text/javascript")
+		.body(tokio::fs::read_to_string("./static/request.js").await?)?)
 }
 
-pub async fn signup_handler(credentials: Json<Credentials>) -> Result<Json<Value>> {
-	let url = format!("sqlite://database.db");
-
-	if !Sqlite::database_exists(&url).await? {
-		Sqlite::create_database(&url).await?;
-	}
-
-	let db = SqlitePool::connect(&url).await?;
-
-	sqlx::query(
-		"CREATE TABLE IF NOT EXISTS users (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        username TEXT NOT NULL,
-        password TEXT NOT NULL
-    );",
-	)
-	.execute(&db)
-	.await?;
-
-	let user_exists = sqlx::query("SELECT * FROM users WHERE username = ?1")
-		.bind(&credentials.username)
-		.fetch_optional(&db)
-		.await?;
-
-	if user_exists.is_some() {
-		return Err(errors::Error::Signup);
-	}
-
-	sqlx::query("INSERT OR IGNORE INTO users (username, password) VALUES (?1, ?2)")
-		.bind(&credentials.username)
-		.bind(&credentials.password)
-		.execute(&db)
-		.await?;
-
-	Ok(Json(json!({
-		"result": {
-			"success": true
-		}
-	})))
+async fn index_route() -> Result<Html<String>> {
+	Ok(Html(tokio::fs::read_to_string("./static/index.html").await?))
 }
 
-pub async fn login_handler(cookies: Cookies, credentials: Json<Credentials>) -> Result<Json<Value>> {
-	let url = format!("sqlite://database.db");
+async fn login_route() -> Result<Html<String>> {
+	Ok(Html(tokio::fs::read_to_string("./static/login.html").await?))
+}
 
-	if !Sqlite::database_exists(&url).await? {
-		Sqlite::create_database(&url).await?;
-	}
+async fn signup_route() -> Result<Html<String>> {
+	Ok(Html(tokio::fs::read_to_string("./static/signup.html").await?))
+}
 
-	let db = SqlitePool::connect(&url).await?;
+async fn style_route() -> Result<Response<String>> {
+	Ok(Response::builder()
+		.header("Content-Type", "text/css")
+		.body(tokio::fs::read_to_string("./static/style.css").await?)?)
+}
 
-	let user_exists = sqlx::query("SELECT * FROM users WHERE username = ?1 AND password = ?2")
-		.bind(&credentials.username)
-		.bind(&credentials.password)
-		.fetch_optional(&db)
-		.await?;
+async fn user_manager_route() -> Result<Response<String>> {
+	Ok(Response::builder()
+		.header("Content-Type", "text/javascript")
+		.body(tokio::fs::read_to_string("./static/userManagement.js").await?)?)
+}
 
-	if user_exists.is_none() {
-		return Err(errors::Error::Login);
-	}
+pub fn routes_index() -> Router {
+	Router::new()
+		.route("/", get(index_route))
+		.route("/login.html", get(login_route))
+		.route("/signup.html", get(signup_route))
+		.route("/style.css", get(style_route))
+		.route("/userManagement.js", get(user_manager_route))
+}
 
-	// TODO: generate real auth token
-	// TODO: parse auth token
-	let mut cookie = Cookie::new(crate::AUTH_TOKEN, "user-1.exp.sign");
-	cookie.set_http_only(true);
-	cookie.set_path("/");
-	cookies.add(cookie);
+pub fn routes_map() -> Router {
+	Router::new()
+		.route("/map.html", get(map_index_route))
+		.route("/map.js", get(map_script_route))
+		.route("/request.js", get(request_route))
+		.route_layer(middleware::from_fn(mw_require_auth))
+}
 
-	Ok(Json(json!({
-		"result": {
-			"success": true
-		}
-	})))
+pub fn routes_user_management() -> Router {
+	Router::new()
+		.route("/signup", post(handlers::signup_handler))
+		.route("/login", post(handlers::login_handler))
+}
+
+pub fn routes_requests() -> Router {
+	Router::new()
+		.route("/request", post(handlers::handle_request))
+		.route_layer(middleware::from_fn(mw_require_auth))
 }

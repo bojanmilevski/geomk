@@ -1,4 +1,4 @@
-use crate::map_data::MapData;
+use crate::model::MapData;
 
 pub trait Filter<T> {
 	fn execute(&self, input: T) -> T;

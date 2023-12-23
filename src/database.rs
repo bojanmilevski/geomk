@@ -1,6 +1,6 @@
 use crate::errors::Result;
-use crate::map_data::Coordinates;
-use crate::map_data::MapData;
+use crate::model::Coordinates;
+use crate::model::MapData;
 use sqlx::migrate::MigrateDatabase;
 use sqlx::Sqlite;
 use sqlx::SqlitePool;
@@ -23,7 +23,7 @@ impl Database {
 	}
 
 	pub async fn new() -> Result<Self> {
-		let url = format!("sqlite://{DB_NAME}.db");
+		let url = format!("sqlite://{}.db", DB_NAME);
 
 		if !Sqlite::database_exists(&url).await? {
 			Sqlite::create_database(&url).await?;

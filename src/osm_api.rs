@@ -3,28 +3,25 @@ use crate::errors::Result;
 
 const OVERPASS_URL: &str = "https://overpass-api.de/api/interpreter";
 
-pub struct OsmApi;
+async fn send_query(query_params: &str) -> Result<String> {
+	let response = reqwest::Client::new()
+		.get(OVERPASS_URL)
+		.query(&[("data", &query_params)])
+		.send()
+		.await?;
 
-impl OsmApi {
-	async fn send_query(query_params: &str) -> Result<String> {
-		let response = reqwest::Client::new()
-			.get(OVERPASS_URL)
-			.query(&[("data", &query_params)])
-			.send()
-			.await?;
-
-		if !response.status().is_success() {
-			return Err(Error::Response);
-		}
-
-		let raw_data = response.text().await?;
-
-		Ok(raw_data)
+	if !response.status().is_success() {
+		return Err(Error::Response);
 	}
 
-	pub async fn query_coordinates(query_item: &str) -> Result<String> {
-		let query_params = format!(
-			r#"
+	let raw_data = response.text().await?;
+
+	Ok(raw_data)
+}
+
+pub async fn query_coordinates(query_item: &str) -> Result<String> {
+	let query_params = format!(
+		r#"
 			[out:json];
 			area["ISO3166-1"="MK"]->.a;
 			(
@@ -32,14 +29,14 @@ impl OsmApi {
 			);
 			out center;
 			"#
-		);
+	);
 
-		Ok(Self::send_query(&query_params).await?)
-	}
+	Ok(send_query(&query_params).await?)
+}
 
-	pub async fn query_city_boundaries(city: &str) -> Result<String> {
-		let query_params = format!(
-			r#"
+pub async fn query_city_boundaries(city: &str) -> Result<String> {
+	let query_params = format!(
+		r#"
 			[out:json];
 			area["name:en"="{city}"];
 			(
@@ -48,8 +45,7 @@ impl OsmApi {
 			(._;>;);
 			out body;
 			"#
-		);
+	);
 
-		Ok(Self::send_query(&query_params).await?)
-	}
+	Ok(send_query(&query_params).await?)
 }
