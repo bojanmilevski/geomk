@@ -1,5 +1,3 @@
-let isLoggedIn = false;
-
 const checkFields = async (fields) => {
 	fields.forEach(field => {
 		if (field === '') {
@@ -33,7 +31,6 @@ const signUp = async () => {
 	try {
 		await sendSignUpRequest(credentials);
 		await sendLogInRequest(credentials);
-		isLoggedIn = true;
 	} catch (error) {
 		alert(error.message);
 		return;
@@ -52,8 +49,6 @@ const sendSignUpRequest = async (credentials) => {
 	if (!response.ok) {
 		throw Error('Signup error')
 	}
-
-	console.log('successful signup');
 }
 
 const logIn = async () => {
@@ -93,5 +88,5 @@ const sendLogInRequest = async (credentials) => {
 		throw Error('Login error');
 	}
 
-	console.log('successful login');
+	window.location.href = '/map/index.html';
 }

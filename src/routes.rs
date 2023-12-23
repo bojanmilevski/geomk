@@ -14,11 +14,19 @@ use serde_json::Value;
 use sqlx::migrate::MigrateDatabase;
 use sqlx::Sqlite;
 use sqlx::SqlitePool;
+use tower_cookies::Cookie;
+use tower_cookies::Cookies;
 
 #[derive(Deserialize, Serialize, Debug, Clone)]
 pub struct Request {
 	pub query: String,
 	pub city: String,
+}
+
+#[derive(Deserialize, Serialize, Debug, Clone)]
+pub struct Credentials {
+	pub username: String,
+	pub password: String,
 }
 
 pub async fn handle_request(request: Json<Request>) -> Result<Json<Vec<Coordinates>>> {
@@ -44,13 +52,7 @@ pub async fn handle_request(request: Json<Request>) -> Result<Json<Vec<Coordinat
 	Ok(Json(result.coordinates))
 }
 
-#[derive(Deserialize, Serialize, Debug, Clone)]
-pub struct CredentialsPayload {
-	pub username: String,
-	pub password: String,
-}
-
-pub async fn signup_handler(credentials: Json<CredentialsPayload>) -> Result<Json<Value>> {
+pub async fn signup_handler(credentials: Json<Credentials>) -> Result<Json<Value>> {
 	let url = format!("sqlite://database.db");
 
 	if !Sqlite::database_exists(&url).await? {
@@ -61,6 +63,7 @@ pub async fn signup_handler(credentials: Json<CredentialsPayload>) -> Result<Jso
 
 	sqlx::query(
 		"CREATE TABLE IF NOT EXISTS users (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
         username TEXT NOT NULL,
         password TEXT NOT NULL
     );",
@@ -90,7 +93,7 @@ pub async fn signup_handler(credentials: Json<CredentialsPayload>) -> Result<Jso
 	})))
 }
 
-pub async fn login_handler(credentials: Json<CredentialsPayload>) -> Result<Json<Value>> {
+pub async fn login_handler(cookies: Cookies, credentials: Json<Credentials>) -> Result<Json<Value>> {
 	let url = format!("sqlite://database.db");
 
 	if !Sqlite::database_exists(&url).await? {
@@ -108,6 +111,13 @@ pub async fn login_handler(credentials: Json<CredentialsPayload>) -> Result<Json
 	if user_exists.is_none() {
 		return Err(errors::Error::Login);
 	}
+
+	// TODO: generate real auth token
+	// TODO: parse auth token
+	let mut cookie = Cookie::new(crate::AUTH_TOKEN, "user-1.exp.sign");
+	cookie.set_http_only(true);
+	cookie.set_path("/");
+	cookies.add(cookie);
 
 	Ok(Json(json!({
 		"result": {

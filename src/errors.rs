@@ -10,6 +10,15 @@ pub enum Error {
 	#[error("Response Error")]
 	Response,
 
+	#[error("Signup error")]
+	Signup,
+
+	#[error("Login error")]
+	Login,
+
+	#[error("Auth token error")]
+	AuthToken,
+
 	#[error("Request Error")]
 	Request(#[from] reqwest::Error),
 
@@ -27,12 +36,6 @@ pub enum Error {
 
 	#[error("Axum HTTP Error")]
 	AxumHTTP(#[from] axum::http::Error),
-
-	#[error("Signup error")]
-	Signup,
-
-	#[error("Login error")]
-	Login,
 }
 
 impl IntoResponse for Error {

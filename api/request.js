@@ -1,4 +1,8 @@
-async function mapCoordinates(coordinates) {
+const mapCoordinates = async (coordinates) => {
+	if (coordinates.length == 0) {
+		throw Error('No coordinates found for specified city');
+	}
+
 	coordinates.forEach(coordinate => {
 		var lat = coordinate.lat;
 		var lon = coordinate.lon;
@@ -6,7 +10,7 @@ async function mapCoordinates(coordinates) {
 	})
 }
 
-async function sendRequest() {
+const sendRequest = async () => {
 	const City = document.getElementById('city').value;
 	const Query = document.getElementById('query').value;
 
@@ -19,5 +23,11 @@ async function sendRequest() {
 	});
 
 	const coordinates = await response.json();
-	await mapCoordinates(coordinates);
+
+	try {
+		await mapCoordinates(coordinates);
+	} catch (error) {
+		alert(error);
+		return;
+	}
 }
