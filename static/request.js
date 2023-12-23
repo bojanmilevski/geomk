@@ -10,7 +10,7 @@ async function sendRequest() {
 	const City = document.getElementById('city').value;
 	const Query = document.getElementById('query').value;
 
-	const response = await fetch('/request', {
+	const response = await fetch('/api/request', {
 		method: 'POST',
 		headers: {
 			'Content-Type': 'application/json',

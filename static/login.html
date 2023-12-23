@@ -5,13 +5,17 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		<title>GeoMK</title>
 		<link rel="stylesheet" href="style.css" />
+		<script src="userManagement.js"></script>
 	</head>
 	<body id="index-body">
 		<div id="index-container">
-			<h1>WELCOME TO GEOMK</h1>
-			<p>A website for querying places in Macedonia</p>
-			<a id="button" href="login.html">Login</a>
-			<a id="button" href="signup.html">Signup</a>
+			<form>
+				<label for="username">Username</label><br />
+				<input type="text" id="username" /><br />
+				<label for="password">Password</label><br />
+				<input type="text" id="password" /><br />
+			</form>
+			<button id="button" onclick="logIn()">Login</button>
 		</div>
 	</body>
 </html>

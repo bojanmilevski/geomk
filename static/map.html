@@ -1,37 +1,43 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>GeoMK</title>
-    <link rel="stylesheet" href="style.css" />
-    <link
-      rel="stylesheet"
-      href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
-    />
-    <script src="request.js"></script>
-  </head>
-  <body>
-    <div id="map-container">
-      <label for="city">CITY</label>
-      <select id="city">
-        <option value="Gostivar">Gostivar</option>
-        <option value="Kavadarci">Kavadarci</option>
-        <option value="Ohrid">Ohrid</option>
-        <option value="Shtip">Shtip</option>
-        <option value="Skopje">Skopje</option>
-        <option value="Veles">Veles</option>
-        <option value="Tetovo">Tetovo</option>
-      </select>
-      <label for="query">QUERY PARAMETER</label>
-      <select id="query">
-        <option value="drinking_water">Drinking water</option>
-      </select>
-      <button id="button" onclick="sendRequest()">Submit</button>
-    </div>
-    <br />
-    <div id="map"></div>
-  </body>
-  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-  <script src="map.js"></script>
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>GeoMK</title>
+		<link rel="stylesheet" href="style.css" />
+		<link
+			rel="stylesheet"
+			href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+		/>
+	</head>
+	<body>
+		<div id="map-container">
+			<div>
+				<label for="city">CITY</label>
+				<select id="city">
+					<option value="Gostivar">Gostivar</option>
+					<option value="Kavadarci">Kavadarci</option>
+					<option value="Ohrid">Ohrid</option>
+					<option value="Shtip">Shtip</option>
+					<option value="Skopje">Skopje</option>
+					<option value="Veles">Veles</option>
+					<option value="Tetovo">Tetovo</option>
+				</select>
+			</div>
+			<div>
+				<label for="query">QUERY PARAMETER</label>
+				<select id="query">
+					<option value="drinking_water">Drinking water</option>
+				</select>
+			</div>
+			<div>
+				<button id="button" onclick="sendRequest()">Submit</button>
+			</div>
+		</div>
+		<br />
+		<div id="map"></div>
+	</body>
+	<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+	<script src="request.js"></script>
+	<script src="map.js"></script>
 </html>

@@ -27,6 +27,12 @@ pub enum Error {
 
 	#[error("Axum HTTP Error")]
 	AxumHTTP(#[from] axum::http::Error),
+
+	#[error("Signup error")]
+	Signup,
+
+	#[error("Login error")]
+	Login,
 }
 
 impl IntoResponse for Error {

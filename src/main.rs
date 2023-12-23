@@ -11,7 +11,6 @@ use axum::routing::get_service;
 use axum::routing::post;
 use axum::Router;
 use errors::Result;
-use routers::handle_request;
 use std::net::SocketAddr;
 use tower_http::cors;
 use tower_http::services::ServeDir;
@@ -21,7 +20,10 @@ fn static_routes() -> Router {
 }
 
 fn routes() -> Router {
-	Router::new().route("/request", post(handle_request))
+	Router::new()
+		.route("/request", post(routers::handle_request))
+		.route("/signup", post(routers::signup_handler))
+		.route("/login", post(routers::login_handler))
 }
 
 #[tokio::main]
@@ -32,7 +34,7 @@ async fn main() -> Result<()> {
 		.allow_origin(cors::Any);
 
 	let routes = Router::new()
-		.merge(routes())
+		.nest("/api", routes())
 		.layer(cors)
 		.fallback_service(static_routes());
 
