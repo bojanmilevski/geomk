@@ -68,13 +68,12 @@ pub async fn signup_handler(credentials: Json<CredentialsPayload>) -> Result<Jso
 	.execute(&db)
 	.await?;
 
-	let user_exists: bool = sqlx::query_scalar("SELECT EXISTS (SELECT 1 FROM users WHERE username = ?1)")
+	let user_exists = sqlx::query("SELECT * FROM users WHERE username = ?1")
 		.bind(&credentials.username)
-		.fetch_one(&db)
+		.fetch_optional(&db)
 		.await?;
 
-	if user_exists {
-		eprintln!("User already exists");
+	if user_exists.is_some() {
 		return Err(errors::Error::Signup);
 	}
 
@@ -107,7 +106,6 @@ pub async fn login_handler(credentials: Json<CredentialsPayload>) -> Result<Json
 		.await?;
 
 	if user_exists.is_none() {
-		eprintln!("Invalid credentials");
 		return Err(errors::Error::Login);
 	}
 
