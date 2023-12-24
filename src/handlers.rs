@@ -8,6 +8,7 @@ use crate::model::Coordinates;
 use crate::model::MapData;
 use crate::osm_api;
 use crate::pipe::Pipe;
+use axum::extract::Path;
 use axum::http::StatusCode;
 use axum::response::IntoResponse;
 use axum::response::Response;
@@ -250,4 +251,17 @@ pub async fn get_handler(cookies: Cookies) -> Result<Json<MapData>> {
 	db.close().await;
 
 	Ok(Json(map_data))
+}
+
+pub async fn delete_handler(cookies: Cookies, Path(id): Path<i64>) -> Result<impl IntoResponse> {
+	let db = database::connect().await?;
+	let (user_id, _, _) = auth::parse_token(cookies).await?;
+	let cmd = "DELETE FROM userCoordinates WHERE userId = ?1 AND coordinateId = ?2";
+	sqlx::query(&cmd)
+		.bind(&user_id)
+		.bind(&id)
+		.execute(&db)
+		.await?;
+	db.close().await;
+	Ok((StatusCode::OK, "OK"))
 }

@@ -4,6 +4,7 @@ use crate::handlers;
 use axum::middleware;
 use axum::response::Html;
 use axum::response::Response;
+use axum::routing::delete;
 use axum::routing::get;
 use axum::routing::post;
 use axum::Router;
@@ -88,6 +89,6 @@ pub fn routes_requests() -> Router {
 		.route("/request", post(handlers::handle_request))
 		.route("/save", post(handlers::save_handler))
 		.route("/get", get(handlers::get_handler))
-		// .route("/delete", delete(handlers::delete_handler))
+		.route("/delete/:id", delete(handlers::delete_handler))
 		.route_layer(middleware::from_fn(auth::mw_require_auth))
 }
