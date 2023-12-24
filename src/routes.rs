@@ -87,7 +87,7 @@ pub fn routes_requests() -> Router {
 	Router::new()
 		.route("/request", post(handlers::handle_request))
 		.route("/save", post(handlers::save_handler))
-		// .route("/get", get(handlers::get_handler))
+		.route("/get", get(handlers::get_handler))
 		// .route("/delete", delete(handlers::delete_handler))
 		.route_layer(middleware::from_fn(auth::mw_require_auth))
 }

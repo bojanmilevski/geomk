@@ -42,6 +42,9 @@ pub enum Error {
 
 	#[error("ParseIntError")]
 	ParseIntError(#[from] std::num::ParseIntError),
+
+	#[error("Unknown error")]
+	Unknown,
 }
 
 impl IntoResponse for Error {

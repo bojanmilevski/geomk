@@ -1,25 +1,25 @@
 use crate::auth;
 use crate::auth::AUTH_TOKEN;
+use crate::database;
 use crate::errors::Error;
 use crate::errors::Result;
 use crate::filter::CityFilter;
+use crate::model::Coordinates;
 use crate::model::MapData;
 use crate::osm_api;
 use crate::pipe::Pipe;
+use axum::http::StatusCode;
+use axum::response::IntoResponse;
 use axum::response::Response;
 use axum::Json;
 use serde::Deserialize;
 use serde::Serialize;
 use serde_json::json;
 use serde_json::Value;
-use sqlx::migrate::MigrateDatabase;
 use sqlx::FromRow;
 use sqlx::Sqlite;
-use sqlx::SqlitePool;
 use tower_cookies::Cookie;
 use tower_cookies::Cookies;
-
-const DB_NAME: &str = "database";
 
 #[derive(Deserialize, Serialize, Debug, Clone)]
 pub struct MapRequest {
@@ -38,6 +38,11 @@ struct User {
 	id: i64,
 }
 
+#[derive(FromRow, Debug, Clone)]
+struct CoordinateIds {
+	coordinateId: i64,
+}
+
 pub async fn main_response_mapper(res: Response) -> Response {
 	res
 }
@@ -49,22 +54,13 @@ pub async fn handle_request(Json(request): Json<MapRequest>) -> Result<Json<MapD
 	let json_boundaries = osm_api::query_city_boundaries(&request.city).await?;
 	let city_boundaries_json: MapData = serde_json::from_str(&json_boundaries)?;
 
-	let db_url = format!("sqlite://{}.db", DB_NAME);
+	let db = database::connect().await?;
 
-	if !Sqlite::database_exists(&db_url).await? {
-		Sqlite::create_database(&db_url).await?;
-	}
-
-	let db = SqlitePool::connect(&db_url).await?;
-
-	let cmd = format!(
-		"CREATE TABLE IF NOT EXISTS coordinates (
-				id INTEGER PRIMARY KEY,
-				lat REAL NOT NULL,
-				lon REAL NOT NULL
-			);"
-	);
-
+	let cmd = "CREATE TABLE IF NOT EXISTS coordinates (
+		id INTEGER PRIMARY KEY,
+		lat REAL NOT NULL,
+		lon REAL NOT NULL
+	);";
 	sqlx::query(&cmd).execute(&db).await?;
 
 	let cmd = format!(
@@ -78,7 +74,7 @@ pub async fn handle_request(Json(request): Json<MapRequest>) -> Result<Json<MapD
 
 	sqlx::query(&cmd).execute(&db).await?;
 
-	let cmd = format!("INSERT OR IGNORE INTO coordinates (id, lat, lon) VALUES (?1, ?2, ?3)");
+	let cmd = "INSERT OR IGNORE INTO coordinates (id, lat, lon) VALUES (?1, ?2, ?3)";
 	for element in &coordinates_json.coordinates {
 		if element.lat != 0.0 && element.lat != 0.0 {
 			sqlx::query(&cmd)
@@ -102,7 +98,7 @@ pub async fn handle_request(Json(request): Json<MapRequest>) -> Result<Json<MapD
 		}
 	}
 
-	let cmd = format!("SELECT * FROM coordinates");
+	let cmd = "SELECT * FROM coordinates";
 	let coordinates = MapData::from(sqlx::query_as(&cmd).fetch_all(&db).await?);
 
 	let cmd = format!("SELECT * FROM {}", &request.city);
@@ -118,25 +114,17 @@ pub async fn handle_request(Json(request): Json<MapRequest>) -> Result<Json<MapD
 }
 
 pub async fn signup_handler(Json(credentials): Json<Credentials>) -> Result<Json<Value>> {
-	let db_url = format!("sqlite://{}.db", DB_NAME);
+	let db = database::connect().await?;
 
-	if !Sqlite::database_exists(&db_url).await? {
-		Sqlite::create_database(&db_url).await?;
-	}
+	let cmd = "CREATE TABLE IF NOT EXISTS users (
+		id INTEGER PRIMARY KEY AUTOINCREMENT,
+		username TEXT NOT NULL,
+		password TEXT NOT NULL
+	);";
+	sqlx::query(&cmd).execute(&db).await?;
 
-	let db = SqlitePool::connect(&db_url).await?;
-
-	sqlx::query(
-		"CREATE TABLE IF NOT EXISTS users (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        username TEXT NOT NULL,
-        password TEXT NOT NULL
-    );",
-	)
-	.execute(&db)
-	.await?;
-
-	let user = sqlx::query("SELECT * FROM users WHERE username = ?1")
+	let cmd = "SELECT * FROM users WHERE username = ?1";
+	let user = sqlx::query(&cmd)
 		.bind(&credentials.username)
 		.fetch_optional(&db)
 		.await?;
@@ -145,7 +133,8 @@ pub async fn signup_handler(Json(credentials): Json<Credentials>) -> Result<Json
 		return Err(Error::Signup);
 	}
 
-	sqlx::query("INSERT OR IGNORE INTO users (username, password) VALUES (?1, ?2)")
+	let cmd = "INSERT OR IGNORE INTO users (username, password) VALUES (?1, ?2)";
+	sqlx::query(&cmd)
 		.bind(&credentials.username)
 		.bind(&credentials.password)
 		.execute(&db)
@@ -163,22 +152,18 @@ pub async fn signup_handler(Json(credentials): Json<Credentials>) -> Result<Json
 }
 
 pub async fn login_handler(cookies: Cookies, Json(credentials): Json<Credentials>) -> Result<Json<Value>> {
-	let db_url = format!("sqlite://{}.db", DB_NAME);
+	let db = database::connect().await?;
 
-	if !Sqlite::database_exists(&db_url).await? {
-		Sqlite::create_database(&db_url).await?;
-	}
-
-	let db = SqlitePool::connect(&db_url).await?;
-
-	sqlx::query("SELECT * FROM users WHERE username = ?1 AND password = ?2")
+	let cmd = "SELECT * FROM users WHERE username = ?1 AND password = ?2";
+	sqlx::query(&cmd)
 		.bind(&credentials.username)
 		.bind(&credentials.password)
 		.fetch_optional(&db)
 		.await?
 		.ok_or(Error::Login)?;
 
-	let user = sqlx::query_as::<Sqlite, User>("SELECT * FROM users WHERE username = ?1 AND password = ?2")
+	let cmd = "SELECT * FROM users WHERE username = ?1 AND password = ?2";
+	let user = sqlx::query_as::<Sqlite, User>(&cmd)
 		.bind(&credentials.username)
 		.bind(&credentials.password)
 		.fetch_optional(&db)
@@ -203,35 +188,30 @@ pub async fn login_handler(cookies: Cookies, Json(credentials): Json<Credentials
 	Ok(Json(body))
 }
 
-pub async fn save_handler(cookies: Cookies, Json(ids): Json<Vec<String>>) -> Result<Json<i64>> {
-	let db_url = format!("sqlite://{}.db", DB_NAME);
+pub async fn save_handler(cookies: Cookies, Json(ids): Json<Vec<String>>) -> Result<impl IntoResponse> {
+	let db = database::connect().await?;
 
-	if !Sqlite::database_exists(&db_url).await? {
-		Sqlite::create_database(&db_url).await?;
-	}
-
-	let db = SqlitePool::connect(&db_url).await?;
-
-	sqlx::query(
-		"CREATE TABLE IF NOT EXISTS userCoordinates (
-        userId INTEGER,
-        coordinateId INTEGER
-    );",
-	)
-	.execute(&db)
-	.await?;
+	let cmd = "CREATE TABLE IF NOT EXISTS userCoordinates (
+	  id INTEGER PRIMARY KEY AUTOINCREMENT,
+	  userId INTEGER,
+	  coordinateId INTEGER
+	);";
+	sqlx::query(&cmd).execute(&db).await?;
 
 	let (id, _, _) = auth::parse_token(cookies).await?;
-	let user_id = sqlx::query_as::<Sqlite, User>("SELECT * FROM users WHERE id = ?1")
+
+	let cmd = "SELECT * FROM users WHERE id = ?1";
+	let user_id = sqlx::query_as::<Sqlite, User>(&cmd)
 		.bind(&id)
 		.fetch_optional(&db)
 		.await?
 		.ok_or(Error::Login)?
 		.id;
 
+	let cmd = "INSERT INTO userCoordinates (userId, coordinateId) SELECT ?1, ?2 WHERE NOT EXISTS (SELECT 1 FROM userCoordinates WHERE userId = ?1 AND coordinateId = ?2);";
 	for id in ids.iter() {
 		let number: std::result::Result<i64, _> = id.parse();
-		sqlx::query("INSERT INTO userCoordinates (userId, coordinateId) VALUES (?1, ?2)")
+		sqlx::query(&cmd)
 			.bind(&user_id)
 			.bind(&number?)
 			.execute(&db)
@@ -240,5 +220,34 @@ pub async fn save_handler(cookies: Cookies, Json(ids): Json<Vec<String>>) -> Res
 
 	db.close().await;
 
-	Ok(Json(Default::default()))
+	Ok((StatusCode::OK, "OK"))
+}
+
+pub async fn get_handler(cookies: Cookies) -> Result<Json<MapData>> {
+	let db = database::connect().await?;
+
+	let (user_id, _, _) = auth::parse_token(cookies).await?;
+
+	let cmd = "SELECT * FROM userCoordinates WHERE userId = ?1";
+	let coordinate_ids = sqlx::query_as::<Sqlite, CoordinateIds>(&cmd)
+		.bind(&user_id)
+		.fetch_all(&db)
+		.await?;
+
+	let mut coordinates = Vec::new();
+	let cmd = "SELECT * FROM coordinates WHERE id = ?1";
+	for coordinate_id in coordinate_ids {
+		let coordinate = sqlx::query_as::<Sqlite, Coordinates>(&cmd)
+			.bind(&coordinate_id.coordinateId)
+			.fetch_optional(&db)
+			.await?
+			.ok_or(Error::Unknown)?;
+		coordinates.push(coordinate);
+	}
+
+	let map_data = MapData { coordinates };
+
+	db.close().await;
+
+	Ok(Json(map_data))
 }

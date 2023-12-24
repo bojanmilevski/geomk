@@ -5,7 +5,8 @@ const getCoordinates = async () => {
 			throw Error('get pins error');
 		} return response.json();
 	}).then(data => {
-		insertCoordinates(data);
+		console.log(data);
+		insertCoordinates(data.elements);
 	}).catch(error => {
 		alert(error.message);
 		return;
@@ -21,7 +22,9 @@ const insertCoordinates = async (coordinates) => {
 
 	coordinates.forEach(c => {
 		const p = document.createElement('p');
-		p.textContent = `lat: ${c.lat} lon: ${c.long}`;
+		p.textContent = `lat: ${c.lat} lon: ${c.lon}`;
 		div.appendChild(p);
 	})
 }
+
+getCoordinates()
