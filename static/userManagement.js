@@ -89,4 +89,5 @@ const sendLogInRequest = async (credentials) => {
 	}
 
 	window.location.href = '/map.html';
+	localStorage.setItem('isLoggedIn', true);
 }

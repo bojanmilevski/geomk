@@ -5,10 +5,11 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		<title>GeoMK</title>
 		<link rel="stylesheet" href="style.css" />
+		<script src="redirect.js"></script>
 		<script src="userManagement.js"></script>
 	</head>
-	<body id="index-body">
-		<div id="index-container">
+	<body>
+		<div>
 			<form>
 				<label for="username">Username</label><br />
 				<input type="text" id="username" /><br />
@@ -17,7 +18,7 @@
 				<label for="confirm-password">Password</label><br />
 				<input type="text" id="confirmPassword" /><br />
 			</form>
-			<button id="button" onclick="signUp()">Signup</button>
+			<button id="button" type="submit" onclick="signUp()">Signup</button>
 		</div>
 	</body>
 </html>

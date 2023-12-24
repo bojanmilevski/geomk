@@ -2,13 +2,13 @@ use serde::Deserialize;
 use serde::Serialize;
 use sqlx::FromRow;
 
-#[derive(Default, Debug, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct MapData {
 	#[serde(rename = "elements")]
 	pub coordinates: Vec<Coordinates>,
 }
 
-#[derive(Debug, Default, Serialize, Deserialize, FromRow)]
+#[derive(Debug, Default, Clone, Serialize, Deserialize, FromRow)]
 pub struct Coordinates {
 	pub id: i64,
 	#[serde(default = "def")]
@@ -19,6 +19,12 @@ pub struct Coordinates {
 
 fn def() -> f64 {
 	0.0
+}
+
+impl MapData {
+	pub fn from(coordinates: Vec<Coordinates>) -> Self {
+		Self { coordinates }
+	}
 }
 
 impl Coordinates {

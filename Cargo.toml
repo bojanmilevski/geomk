@@ -11,14 +11,16 @@ panic = 'abort'
 strip = true
 
 [dependencies]
+async-trait = "0.1.75"
 axum = "0.7.1"
 httpc-test = "0.1.8"
+lazy-regex = "3.1.0"
 log = "0.4.20"
 reqwest = "0.11.22"
 serde = { version = "1.0.190", features = ["serde_derive", "derive"] }
 serde_json = "1.0.108"
 sqlx = { version = "0.7.2", features = ["sqlite", "runtime-tokio"] }
-thiserror = "1.0.50"
+thiserror = "1.0.51"
 tokio = { version = "1.33.0", features = ["full"] }
 tower-cookies = "0.10.0"
 tower-http = { version = "0.5.0", features = ["cors", "fs"] }

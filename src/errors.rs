@@ -36,6 +36,12 @@ pub enum Error {
 
 	#[error("Axum HTTP Error")]
 	AxumHTTP(#[from] axum::http::Error),
+
+	#[error("AuthFailTokenWrongFormat")]
+	AuthFailTokenWrongFormat,
+
+	#[error("ParseIntError")]
+	ParseIntError(#[from] std::num::ParseIntError),
 }
 
 impl IntoResponse for Error {

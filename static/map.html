@@ -11,36 +11,44 @@
 		/>
 	</head>
 	<body>
-		<div id="map-container">
-			<div>
-				<label for="city">CITY</label>
-				<select id="city">
-					<option value="Gevgelija">Gevgelija</option>
-					<option value="Gostivar">Gostivar</option>
-					<option value="Kavadarci">Kavadarci</option>
-					<option value="Kumanovo">Kumanovo</option>
-					<option value="Ohrid">Ohrid</option>
-					<option value="Prilep">Prilep</option>
-					<option value="Shtip">Shtip</option>
-					<option value="Skopje">Skopje</option>
-					<option value="Tetovo">Tetovo</option>
-					<option value="Veles">Veles</option>
-				</select>
-			</div>
-			<div>
-				<label for="query">QUERY PARAMETER</label>
-				<select id="query">
-					<option value="drinking_water">Drinking water</option>
-				</select>
-			</div>
-			<div>
-				<button id="button" onclick="sendRequest()">Submit</button>
-			</div>
+		<div>
+			<a href="profile.html">My profile</a>
+		</div>
+		<div>
+			<label for="city">CITY</label>
+			<select id="city">
+				<option value="Gevgelija">Gevgelija</option>
+				<option value="Gostivar">Gostivar</option>
+				<option value="Kavadarci">Kavadarci</option>
+				<option value="Kumanovo">Kumanovo</option>
+				<option value="Ohrid">Ohrid</option>
+				<option value="Prilep">Prilep</option>
+				<option value="Shtip">Shtip</option>
+				<option value="Skopje">Skopje</option>
+				<option value="Tetovo">Tetovo</option>
+				<option value="Veles">Veles</option>
+			</select>
+		</div>
+		<div>
+			<label for="query">QUERY PARAMETER</label>
+			<select id="query">
+				<option value="drinking_water">Drinking water</option>
+			</select>
+		</div>
+		<div>
+			<button id="button" type="submit" onclick="sendRequest()">Search</button>
+		</div>
+		<div>
+			<select multiple id="listBox"></select>
+		</div>
+		<div>
+			<button id="button" type="submit" onclick="saveCoordinates()">
+				Save Pins
+			</button>
 		</div>
 		<br />
 		<div id="map"></div>
 	</body>
 	<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-	<script src="request.js"></script>
 	<script src="map.js"></script>
 </html>
