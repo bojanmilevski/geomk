@@ -2,6 +2,8 @@
 
 The server is hosted on [https://map.bojanmilevski.com](https://map.bojanmilevski.com).
 
+If you are experiencing issues, please clear your browser's cookies!
+
 ## LICENSE
 
 This software is licensed under the [GPL v3.0 License](https://www.gnu.org/licenses/gpl-3.0.en.html).

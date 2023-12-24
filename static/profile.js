@@ -42,10 +42,10 @@ const insertCoordinates = async (coordinates) => {
 const deleteCoordinate = async (id) => {
 	await fetch('/api/delete/' + id, {
 		method: 'DELETE',
-	}).then(response => {
-		if (!response.ok) {
-			throw Error('get pins error');
-		}
+	// }).then(response => {
+	// 	if (!response.ok) {
+	// 		throw Error('get pins error');
+	// 	}
 	}).then(_ => {
 		getCoordinates();
 	}).catch(error => {
