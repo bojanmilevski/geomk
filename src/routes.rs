@@ -86,7 +86,7 @@ pub fn routes_user_management() -> Router {
 
 pub fn routes_requests() -> Router {
 	Router::new()
-		.route("/request", post(handlers::handle_request))
+		.route("/request", post(handlers::request_handler))
 		.route("/save", post(handlers::save_handler))
 		.route("/get", get(handlers::get_handler))
 		.route("/delete/:id", delete(handlers::delete_handler))

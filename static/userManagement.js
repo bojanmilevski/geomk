@@ -47,7 +47,7 @@ const sendSignUpRequest = async (credentials) => {
 	});
 
 	if (!response.ok) {
-		throw Error('Signup error')
+		throw Error('A user with that username already exists!')
 	}
 }
 
@@ -85,7 +85,7 @@ const sendLogInRequest = async (credentials) => {
 	});
 
 	if (!response.ok) {
-		throw Error('Login error');
+		throw Error('Incorrect password or user does not exist! Please try again!');
 	}
 
 	window.location.href = '/map.html';

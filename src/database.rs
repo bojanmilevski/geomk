@@ -3,16 +3,22 @@ use sqlx::migrate::MigrateDatabase;
 use sqlx::Sqlite;
 use sqlx::SqlitePool;
 
-pub const DB_NAME: &str = "database";
+const DB_NAME: &str = "database";
 
-pub async fn connect() -> Result<SqlitePool> {
-	let db_url = format!("sqlite://{}.db", DB_NAME);
+pub struct Database {
+	pub db: SqlitePool,
+}
 
-	if !Sqlite::database_exists(&db_url).await? {
-		Sqlite::create_database(&db_url).await?;
+impl Database {
+	pub async fn connect() -> Result<Self> {
+		let db_url = format!("sqlite://{}.db", DB_NAME);
+
+		if !Sqlite::database_exists(&db_url).await? {
+			Sqlite::create_database(&db_url).await?;
+		}
+
+		let db = SqlitePool::connect(&db_url).await?;
+
+		Ok(Self { db })
 	}
-
-	let db = SqlitePool::connect(&db_url).await?;
-
-	Ok(db)
 }
